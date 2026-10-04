@@ -1,0 +1,10 @@
+{
+  "name": "lume-promotional-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minimalist 120Hz Neomorphic & Liquid Glass promotional website and APK distribution hub for Lume Photo Editor.",
+  "scripts": {
+    "start": "npx serve .",
+    "build": "echo 'Static bundle ready for Vercel deployment'"
+  }
+}

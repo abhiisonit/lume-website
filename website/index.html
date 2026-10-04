@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="liquid-glass">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lume. — Edit Beyond Ordinary | Offline Pro Photo Studio for Android</title>
+  <meta name="description" content="Lume. is an offline-first, GPU-accelerated Android photo editor crafted with tactile neomorphic depth and 120Hz Liquid Glass physics. Download the APK directly." />
+  <meta name="theme-color" content="#DBE4F3" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root,
+    [data-theme="light"] {
+      --bg-base: #E6E9EE;
+      --surface-1: #EBEEF2;
+      --surface-2: #DFE3E9;
+      --surface-canvas: #DDE0E6;
+      --text-primary: #15171C;
+      --text-secondary: #3E434B;
+      --text-tertiary: #5F6570;
+      --accent: #3B5BFF;
+      --accent-glow: rgba(59, 91, 255, 0.25);
+      --ink: #15171C;
+      --ink-on: #F4F5F7;
+      --shadow-dark: rgba(139, 148, 165, 0.52);
+      --shadow-light: rgba(255, 255, 255, 0.92);
+      --border-rim: rgba(255, 255, 255, 0.65);
+      --glass-blur: 0px;
+      --card-gradient: linear-gradient(135deg, rgba(255,255,255,0.38) 0%, rgba(0,0,0,0.02) 100%);
+      --orb-opacity: 0;
+    }
+
+    [data-theme="dark"] {
+      --bg-base: #131418;
+      --surface-1: #181A1F;
+      --surface-2: #0F1013;
+      --surface-canvas: #08090B;
+      --text-primary: #F1F3F6;
+      --text-secondary: #B4BAC4;
+      --text-tertiary: #8F96A1;
+      --accent: #8CA0FF;
+      --accent-glow: rgba(140, 160, 255, 0.25);
+      --ink: #F1F3F6;
+      --ink-on: #131418;
+      --shadow-dark: rgba(0, 0, 0, 0.72);
+      --shadow-light: rgba(255, 255, 255, 0.06);
+      --border-rim: rgba(255, 255, 255, 0.08);
+      --glass-blur: 0px;
+      --card-gradient: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.22) 100%);
+      --orb-opacity: 0.18;
+    }
+
+    [data-theme="liquid-glass"] {
+      --bg-base: #DBE4F3;
+      --surface-1: rgba(255, 255, 255, 0.64);
+      --surface-2: rgba(224, 235, 250, 0.56);
+      --surface-canvas: rgba(210, 221, 240, 0.72);
+      --text-primary: #0D111A;
+      --text-secondary: #2D3648;
+      --text-tertiary: #546178;
+      --accent: #2962FF;
+      --accent-glow: rgba(41, 98, 255, 0.30);
+      --ink: #0F1420;
+      --ink-on: #F8FAFF;
+      --shadow-dark: rgba(88, 114, 158, 0.22);
+      --shadow-light: rgba(255, 255, 255, 0.95);
+      --border-rim: rgba(255, 255, 255, 0.88);
+      --glass-blur: 28px;
+      --card-gradient: linear-gradient(135deg, rgba(255,255,255,0.78) 0%, rgba(230,240,255,0.26) 52%, rgba(205,224,255,0.42) 100%);
+      --orb-opacity: 1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      transition: background-color 0.55s cubic-bezier(0.22, 1, 0.36, 1), color 0.4s ease;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    /* 120Hz Liquid Glass Ambient Caustic Orbs */
+    .ambient-backdrop {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: var(--orb-opacity);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(75px);
+      will-change: transform;
+      animation: floatOrb 16s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95);
+    }
+
+    .orb-1 {
+      width: 58vw;
+      height: 58vw;
+      max-width: 760px;
+      max-height: 760px;
+      top: -12%;
+      left: -10%;
+      background: radial-gradient(circle, rgba(112, 169, 255, 0.58) 0%, rgba(144, 194, 255, 0.18) 60%, transparent 100%);
+    }
+
+    .orb-2 {
+      width: 52vw;
+      height: 52vw;
+      max-width: 680px;
+      max-height: 680px;
+      bottom: -14%;
+      right: -8%;
+      background: radial-gradient(circle, rgba(179, 157, 255, 0.48) 0%, rgba(255, 255, 255, 0.3) 65%, transparent 100%);
+      animation-delay: -5s;
+      animation-duration: 19s;
+    }
+
+    .orb-3 {
+      width: 40vw;
+      height: 40vw;
+      max-width: 520px;
+      max-height: 520px;
+      top: 36%;
+      left: 32%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.75) 0%, rgba(173, 216, 255, 0.25) 60%, transparent 100%);
+      animation-delay: -9s;
+      animation-duration: 14s;
+    }
+
+    @keyframes floatOrb {
+      0% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(45px, 28px, 0) scale(1.06); }
+      100% { transform: translate3d(-32px, 48px, 0) scale(0.96); }
+    }
+
+    /* Neomorphic + Liquid Glass Surface Primitives */
+    .neo-raised {
+      background: var(--surface-1);
+      background-image: var(--card-gradient);
+      backdrop-filter: blur(var(--glass-blur)) saturate(190%);
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(190%);
+      box-shadow:
+        8px 8px 20px var(--shadow-dark),
+        -8px -8px 20px var(--shadow-light);
+      border: 1.2px solid var(--border-rim);
+      border-radius: 24px;
+      transition:
+        transform 0.42s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        box-shadow 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+        background 0.42s ease,
+        border-color 0.42s ease;
+    }
+
+    .neo-inset {
+      background: var(--surface-2);
+      backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+      box-shadow:
+        inset 4px 4px 9px var(--shadow-dark),
+        inset -4px -4px 9px var(--shadow-light);
+      border: 1px solid var(--border-rim);
+      border-radius: 16px;
+      transition: all 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .spring-interactive {
+      cursor: pointer;
+      user-select: none;
+      will-change: transform;
+      transition:
+        transform 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .spring-interactive:hover {
+      transform: translateY(-3px) scale(1.015);
+    }
+
+    .spring-interactive:active {
+      transform: translateY(1px) scale(0.955);
+      box-shadow:
+        inset 3px 3px 8px var(--shadow-dark),
+        inset -3px -3px 8px var(--shadow-light);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Top Sticky Navigation */
+    header {
+      position: sticky;
+      top: 16px;
+      z-index: 50;
+      margin-top: 16px;
+    }
+
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      border-radius: 999px;
+    }
+
+    .brand-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .brand-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 13px;
+      background: #FAFAFA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow:
+        4px 4px 10px var(--shadow-dark),
+        -3px -3px 8px var(--shadow-light);
+      border: 1px solid rgba(255,255,255,0.9);
+      padding: 5px;
+    }
+
+    .brand-wordmark-svg {
+      height: 28px;
+      width: auto;
+      fill: var(--text-primary);
+      transition: fill 0.35s ease;
+    }
+
+    /* Theme Segmented Pill Switcher */
+    .theme-switcher {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px;
+      gap: 4px;
+      border-radius: 999px;
+    }
+
+    .theme-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-tertiary);
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .theme-btn.active {
+      background: var(--surface-1);
+      background-image: var(--card-gradient);
+      color: var(--text-primary);
+      box-shadow:
+        3px 3px 8px var(--shadow-dark),
+        -3px -3px 8px var(--shadow-light);
+      transform: scale(1.02);
+    }
+
+    .theme-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0;
+      transform: scale(0.4);
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .theme-btn.active .theme-dot {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .nav-cta {
+      text-decoration: none;
+      background: var(--ink);
+      color: var(--ink-on);
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 18px var(--shadow-dark);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 72px 0 56px;
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .pill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 15px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--text-secondary);
+      margin-bottom: 22px;
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+      animation: pulseDot 1.8s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulseDot {
+      from { transform: scale(0.8); opacity: 0.7; }
+      to { transform: scale(1.3); opacity: 1; }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4.1rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.06;
+      margin-bottom: 20px;
+    }
+
+    .hero p.lead {
+      font-size: 1.12rem;
+      color: var(--text-secondary);
+      max-width: 540px;
+      margin-bottom: 32px;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .btn-primary {
+      text-decoration: none;
+      background: var(--ink);
+      color: var(--ink-on);
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 16px 28px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow:
+        8px 8px 22px var(--shadow-dark),
+        -4px -4px 14px var(--shadow-light);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    .btn-secondary {
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.98rem;
+      padding: 16px 24px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .meta-specs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      font-size: 0.82rem;
+      color: var(--text-tertiary);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .meta-specs span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Interactive Phone Simulator */
+    .phone-stage {
+      display: flex;
+      justify-content: center;
+      perspective: 1200px;
+    }
+
+    .phone-shell {
+      width: 100%;
+      max-width: 390px;
+      padding: 16px;
+      border-radius: 42px;
+      position: relative;
+    }
+
+    .phone-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 4px 6px;
+    }
+
+    .icon-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      border: none;
+      font-size: 0.9rem;
+    }
+
+    .canvas-preview-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3.4;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 14px;
+      background: #10131a;
+      box-shadow:
+        inset 3px 3px 8px rgba(0,0,0,0.35),
+        0 8px 20px var(--shadow-dark);
+    }
+
+    .canvas-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: filter 0.08s linear, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .canvas-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(15, 20, 32, 0.68);
+      color: #fff;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.22);
+    }
+
+    .compare-hold-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.82);
+      color: #0D111A;
+      border: 1px solid rgba(255,255,255,0.95);
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      user-select: none;
+    }
+
+    /* Interactive Demo Panel inside Phone */
+    .demo-panel {
+      padding: 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .panel-handle {
+      width: 34px;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--text-tertiary);
+      opacity: 0.4;
+      margin: 0 auto 10px;
+    }
+
+    .slider-row {
+      margin-bottom: 12px;
+    }
+
+    .slider-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .slider-val {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+    }
+
+    .neo-range {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--surface-2);
+      box-shadow:
+        inset 2px 2px 5px var(--shadow-dark),
+        inset -2px -2px 5px var(--shadow-light);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .neo-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--surface-1);
+      border: 2px solid var(--accent);
+      box-shadow: 0 3px 8px var(--shadow-dark);
+      cursor: grab;
+      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .neo-range::-webkit-slider-thumb:active {
+      transform: scale(1.22);
+      cursor: grabbing;
+    }
+
+    .preset-pills {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .preset-pills::-webkit-scrollbar {
+      display: none;
+    }
+
+    .preset-chip {
+      border: none;
+      padding: 7px 12px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .preset-chip.active {
+      color: var(--accent);
+    }
+
+    /* Features Bento Grid */
+    .section {
+      padding: 64px 0;
+    }
+
+    .section-head {
+      text-align: center;
+      max-width: 660px;
+      margin: 0 auto 44px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.85rem, 3.5vw, 2.65rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      margin-bottom: 12px;
+    }
+
+    .section-head p {
+      color: var(--text-secondary);
+      font-size: 1.02rem;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .bento-card {
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .bento-card.span-2 {
+      grid-column: span 2;
+    }
+
+    .bento-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .bento-card h3 {
+      font-size: 1.22rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+
+    .bento-card p {
+      font-size: 0.94rem;
+      color: var(--text-secondary);
+    }
+
+    /* APK Download & Verification Hub */
+    .download-hub {
+      padding: 40px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .qr-box {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+    }
+
+    .install-steps {
+      list-style: none;
+      display: grid;
+      gap: 12px;
+      margin: 22px 0 28px;
+    }
+
+    .install-steps li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.94rem;
+      color: var(--text-secondary);
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    footer {
+      padding: 48px 0 64px;
+      text-align: center;
+      color: var(--text-tertiary);
+      font-size: 0.86rem;
+    }
+
+    @media (max-width: 920px) {
+      .hero,
+      .download-hub {
+        grid-template-columns: 1fr;
+      }
+      .bento-grid {
+        grid-template-columns: 1fr;
+      }
+      .bento-card.span-2 {
+        grid-column: span 1;
+      }
+      .nav-bar {
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 120Hz Liquid Glass Ambient Caustic Backdrop -->
+  <div class="ambient-backdrop" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Sticky Navigation Bar -->
+  <header class="container">
+    <nav class="nav-bar neo-raised" aria-label="Main Navigation">
+      <a href="#" class="brand-link" aria-label="Lume Home">
+        <div class="brand-badge">
+          <!-- Official Lume. Vector Mark -->
+          <svg viewBox="0 0 640 220" width="34" height="14" aria-hidden="true">
+            <path fill="#000000" d="M 18,32 L 62,32 L 62,154 L 128,154 L 128,192 L 18,192 Z M 144,78 L 186,78 L 186,142 C 186,156 194,164 207,164 C 220,164 228,156 228,142 L 228,78 L 270,78 L 270,192 L 230,192 L 230,176 C 220,188 206,195 190,195 C 162,195 144,176 144,146 Z M 292,78 L 332,78 L 332,94 C 341,82 355,75 371,75 C 388,75 401,83 408,96 C 418,82 433,75 451,75 C 477,75 495,93 495,122 L 495,192 L 453,192 L 453,128 C 453,115 446,107 435,107 C 424,107 416,115 416,128 L 416,192 L 374,192 L 374,128 C 374,115 367,107 356,107 C 345,107 334,115 334,128 L 334,192 L 292,192 Z M 566,75 C 600,75 622,99 622,135 L 622,145 L 548,145 C 551,158 560,166 574,166 C 585,166 593,161 598,153 L 620,174 C 609,188 592,195 571,195 C 534,195 510,171 510,135 C 510,99 534,75 566,75 Z M 548,122 L 585,122 C 583,110 576,103 566,103 C 556,103 550,110 548,122 Z" />
+            <circle fill="#000000" cx="626" cy="173" r="14" />
+          </svg>
+        </div>
+        <!-- Full Lume. Wordmark SVG -->
+        <svg class="brand-wordmark-svg" viewBox="0 0 648 220" role="img" aria-label="Lume.">
+          <path d="M 18,32 L 62,32 L 62,154 L 128,154 L 128,192 L 18,192 Z M 144,78 L 186,78 L 186,142 C 186,156 194,164 207,164 C 220,164 228,156 228,142 L 228,78 L 270,78 L 270,192 L 230,192 L 230,176 C 220,188 206,195 190,195 C 162,195 144,176 144,146 Z M 292,78 L 332,78 L 332,94 C 341,82 355,75 371,75 C 388,75 401,83 408,96 C 418,82 433,75 451,75 C 477,75 495,93 495,122 L 495,192 L 453,192 L 453,128 C 453,115 446,107 435,107 C 424,107 416,115 416,128 L 416,192 L 374,192 L 374,128 C 374,115 367,107 356,107 C 345,107 334,115 334,128 L 334,192 L 292,192 Z M 566,75 C 600,75 622,99 622,135 L 622,145 L 548,145 C 551,158 560,166 574,166 C 585,166 593,161 598,153 L 620,174 C 609,188 592,195 571,195 C 534,195 510,171 510,135 C 510,99 534,75 566,75 Z M 548,122 L 585,122 C 583,110 576,103 566,103 C 556,103 550,110 548,122 Z" />
+          <circle cx="630" cy="173" r="16" />
+        </svg>
+      </a>
+
+      <!-- Live Theme Switcher matching the App's Appearance settings -->
+      <div class="theme-switcher neo-inset" role="tablist" aria-label="Preview App Theme">
+        <button class="theme-btn active" data-set-theme="liquid-glass" role="tab" aria-selected="true">
+          <span class="theme-dot"></span> Liquid Glass
+        </button>
+        <button class="theme-btn" data-set-theme="light" role="tab" aria-selected="false">
+          <span class="theme-dot"></span> Light Neo
+        </button>
+        <button class="theme-btn" data-set-theme="dark" role="tab" aria-selected="false">
+          <span class="theme-dot"></span> Dark Neo
+        </button>
+      </div>
+
+      <a href="./Lume.apk" download="Lume-v1.0.0.apk" class="nav-cta spring-interactive">
+        <span>Download APK</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div>
+        <div class="pill-tag neo-raised">
+          <span class="pulse-dot"></span>
+          <span>v1.0.0 · 120Hz Liquid Glass + OpenGL ES 3.0 Engine</span>
+        </div>
+        <h1>Edit Beyond Ordinary.</h1>
+        <p class="lead">
+          A tactile, offline-first Android darkroom built with real-time OpenGL ES 3.0 shaders, OKLab perceptual color math, and buttery 120Hz Liquid Glass physics. Zero subscriptions. Zero cloud uploads.
+        </p>
+
+        <div class="cta-row">
+          <a href="./Lume.apk" download="Lume-v1.0.0.apk" class="btn-primary spring-interactive">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Download Lume.apk</span>
+          </a>
+          <a href="#features" class="btn-secondary neo-raised spring-interactive">
+            <span>Explore 12 Pro Tools</span>
+          </a>
+        </div>
+
+        <div class="meta-specs">
+          <span>● Android 10+ (API 29–36)</span>
+          <span>● 100% Offline &amp; Private</span>
+          <span>● 120Hz ProMotion Spring UI</span>
+        </div>
+      </div>
+
+      <!-- Interactive Live Lume Studio Preview -->
+      <div class="phone-stage">
+        <div class="phone-shell neo-raised">
+          <div class="phone-topbar">
+            <div class="icon-circle neo-raised">←</div>
+            <span style="font-size: 0.84rem; font-weight: 600;">Alpine_Studio.dng</span>
+            <div class="icon-circle neo-raised" id="resetDemoBtn" title="Reset sliders" style="cursor:pointer;">↺</div>
+          </div>
+
+          <div class="canvas-preview-wrap">
+            <img
+              id="demoImage"
+              class="canvas-img"
+              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1000&q=85"
+              alt="Interactive Alpine Lake preview in Lume editor"
+            />
+            <span class="canvas-badge" id="fpsBadge">120 FPS · GL ES 3.0</span>
+            <button class="compare-hold-btn" id="compareHoldBtn" type="button">Hold: Original</button>
+          </div>
+
+          <div class="demo-panel neo-raised">
+            <div class="panel-handle"></div>
+
+            <div class="slider-row">
+              <div class="slider-header">
+                <span>Exposure (EV)</span>
+                <span class="slider-val" id="expVal">+0.35</span>
+              </div>
+              <input type="range" class="neo-range" id="expSlider" min="-200" max="200" value="35" />
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-header">
+                <span>Contrast &amp; Clarity</span>
+                <span class="slider-val" id="conVal">+18</span>
+              </div>
+              <input type="range" class="neo-range" id="conSlider" min="-100" max="100" value="18" />
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-header">
+                <span>Warmth / OKLab Hue</span>
+                <span class="slider-val" id="satVal">+24</span>
+              </div>
+              <input type="range" class="neo-range" id="satSlider" min="-100" max="100" value="24" />
+            </div>
+          </div>
+
+          <div class="preset-pills" aria-label="Interactive Preset Filters">
+            <button class="preset-chip neo-raised spring-interactive active" data-preset="vivid">Vivid</button>
+            <button class="preset-chip neo-raised spring-interactive" data-preset="film">Warm Film</button>
+            <button class="preset-chip neo-raised spring-interactive" data-preset="chrome">Cool Chrome</button>
+            <button class="preset-chip neo-raised spring-interactive" data-preset="noir">Classic B&amp;W</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bento Grid Features -->
+    <section id="features" class="section">
+      <div class="section-head">
+        <h2>Crafted like precision camera hardware.</h2>
+        <p>Every slider, tone curve, and color wheel responds with physical spring damping, tactile detents, and zero-latency GPU shaders.</p>
+      </div>
+
+      <div class="bento-grid">
+        <article class="bento-card neo-raised span-2">
+          <div class="bento-icon neo-inset">120Hz</div>
+          <div>
+            <h3>iPhone-Class Liquid Glass &amp; Neomorphic Themes</h3>
+            <p>
+              Switch seamlessly between <strong>Liquid Glass</strong> (translucent specular caustics with iridescent rim refraction), <strong>Soft Light Neomorphism</strong>, and <strong>Studio Dark</strong>. All interactive controls run at native 120Hz with physical spring damping.
+            </p>
+          </div>
+        </article>
+
+        <article class="bento-card neo-raised">
+          <div class="bento-icon neo-inset">GL3</div>
+          <div>
+            <h3>OpenGL ES 3.0 Pipeline</h3>
+            <p>
+              Linear-light exposure, highlight recovery, PCHIP monotone cubic RGB curves, and 8-band OKLab HSL mixer evaluated in real time.
+            </p>
+          </div>
+        </article>
+
+        <article class="bento-card neo-raised">
+          <div class="bento-icon neo-inset">◎</div>
+          <div>
+            <h3>3-Way Color Grading</h3>
+            <p>
+              Dedicated Shadows, Midtones, and Highlights hue/saturation wheels with luminance offsets, balance, and blending control.
+            </p>
+          </div>
+        </article>
+
+        <article class="bento-card neo-raised">
+          <div class="bento-icon neo-inset">✦</div>
+          <div>
+            <h3>Selective Masks &amp; Retouch</h3>
+            <p>
+              Up to 8 non-destructive Linear, Radial, and Brush masks with local tone overrides, plus patch-match Heal &amp; Clone stamps.
+            </p>
+          </div>
+        </article>
+
+        <article class="bento-card neo-raised">
+          <div class="bento-icon neo-inset">🔒</div>
+          <div>
+            <h3>100% Offline &amp; Non-Destructive</h3>
+            <p>
+              Your photos never leave your device. Atomic project auto-save, 50-step coalesced undo history, and full-resolution JPEG/PNG/WebP export.
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Direct APK Download Section -->
+    <section id="download" class="section">
+      <div class="download-hub neo-raised">
+        <div>
+          <div class="pill-tag neo-inset">Direct APK Distribution</div>
+          <h2 style="font-size: 2rem; font-weight: 800; letter-spacing: -0.025em; margin-bottom: 12px;">
+            Install Lume. on your Android device
+          </h2>
+          <p style="color: var(--text-secondary);">
+            Hosted directly via GitHub &amp; Vercel for instant, uncompressed APK sharing.
+          </p>
+
+          <ul class="install-steps">
+            <li>
+              <span class="step-num neo-inset">1</span>
+              <span>Tap <strong>Download Lume.apk</strong> below or scan the QR code on your Android phone.</span>
+            </li>
+            <li>
+              <span class="step-num neo-inset">2</span>
+              <span>Open the downloaded <code>Lume-v1.0.0.apk</code> notification and confirm installation.</span>
+            </li>
+            <li>
+              <span class="step-num neo-inset">3</span>
+              <span>Open <strong>Settings → Appearance → Liquid Glass</strong> inside Lume for the 120Hz glass experience.</span>
+            </li>
+          </ul>
+
+          <div class="cta-row" style="margin-bottom: 0;">
+            <a href="./Lume.apk" download="Lume-v1.0.0.apk" class="btn-primary spring-interactive">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Download Lume.apk (v1.0.0)</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="qr-box neo-inset">
+          <!-- Dynamic QR Code pointing to current Vercel deployment APK URL -->
+          <canvas id="qrCanvas" width="168" height="168" style="border-radius: 14px; background: #fff; padding: 10px;"></canvas>
+          <strong style="font-size: 0.88rem;">Scan to Download APK</strong>
+          <span style="font-size: 0.76rem; color: var(--text-tertiary);">Auto-links to your Vercel URL + <code>/Lume.apk</code></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container">
+    <p>Lume. Photo Studio · Built with Kotlin, Jetpack Compose &amp; OpenGL ES 3.0 · 100% Offline Privacy</p>
+  </footer>
+
+  <script>
+    // 1. Theme Switcher (Liquid Glass / Light / Dark)
+    const themeBtns = document.querySelectorAll('[data-set-theme]');
+    themeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-set-theme');
+        document.documentElement.setAttribute('data-theme', target);
+        themeBtns.forEach(b => {
+          const active = b === btn;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+      });
+    });
+
+    // 2. Interactive Studio Sliders & Presets inside Phone Mockup
+    const demoImage = document.getElementById('demoImage');
+    const expSlider = document.getElementById('expSlider');
+    const conSlider = document.getElementById('conSlider');
+    const satSlider = document.getElementById('satSlider');
+    const expVal = document.getElementById('expVal');
+    const conVal = document.getElementById('conVal');
+    const satVal = document.getElementById('satVal');
+    const resetDemoBtn = document.getElementById('resetDemoBtn');
+    const compareHoldBtn = document.getElementById('compareHoldBtn');
+    const presetChips = document.querySelectorAll('[data-preset]');
+
+    let isComparing = false;
+
+    function updateCanvasFilter() {
+      if (isComparing) {
+        demoImage.style.filter = 'none';
+        return;
+      }
+      const exp = parseFloat(expSlider.value) / 100;
+      const con = parseInt(conSlider.value, 10);
+      const sat = parseInt(satSlider.value, 10);
+
+      expVal.textContent = (exp >= 0 ? '+' : '') + exp.toFixed(2);
+      conVal.textContent = (con >= 0 ? '+' : '') + con;
+      satVal.textContent = (sat >= 0 ? '+' : '') + sat;
+
+      const brightness = 1 + exp * 0.28;
+      const contrast = 1 + con * 0.0045;
+      const saturate = Math.max(0, 1 + sat * 0.008);
+      const sepia = sat > 40 ? (sat - 40) * 0.003 : 0;
+
+      demoImage.style.filter = `brightness(${brightness}) contrast(${contrast}) saturate(${saturate}) sepia(${sepia})`;
+    }
+
+    [expSlider, conSlider, satSlider].forEach(slider => {
+      slider.addEventListener('input', updateCanvasFilter);
+      slider.addEventListener('dblclick', () => {
+        slider.value = 0;
+        updateCanvasFilter();
+      });
+    });
+
+    resetDemoBtn.addEventListener('click', () => {
+      expSlider.value = 0;
+      conSlider.value = 0;
+      satSlider.value = 0;
+      updateCanvasFilter();
+    });
+
+    const startCompare = () => { isComparing = true; updateCanvasFilter(); };
+    const endCompare = () => { isComparing = false; updateCanvasFilter(); };
+    compareHoldBtn.addEventListener('mousedown', startCompare);
+    compareHoldBtn.addEventListener('mouseup', endCompare);
+    compareHoldBtn.addEventListener('mouseleave', endCompare);
+    compareHoldBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startCompare(); });
+    compareHoldBtn.addEventListener('touchend', endCompare);
+
+    const presets = {
+      vivid: { exp: 35, con: 18, sat: 24 },
+      film: { exp: 20, con: -8, sat: 48 },
+      chrome: { exp: 10, con: 32, sat: -28 },
+      noir: { exp: 15, con: 42, sat: -100 }
+    };
+
+    presetChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        presetChips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        const p = presets[chip.getAttribute('data-preset')];
+        if (p) {
+          expSlider.value = p.exp;
+          conSlider.value = p.con;
+          satSlider.value = p.sat;
+          updateCanvasFilter();
+        }
+      });
+    });
+
+    updateCanvasFilter();
+
+    // 3. Minimal deterministic QR Matrix Renderer for the APK link
+    (function drawStylizedQr() {
+      const canvas = document.getElementById('qrCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const size = 21;
+      const cell = Math.floor((canvas.width - 20) / size);
+      const offset = Math.floor((canvas.width - cell * size) / 2);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#0D111A';
+
+      function finder(rx, ry) {
+        for (let y = 0; y < 7; y++) {
+          for (let x = 0; x < 7; x++) {
+            const border = x === 0 || x === 6 || y === 0 || y === 6;
+            const inner = x >= 2 && x <= 4 && y >= 2 && y <= 4;
+            if (border || inner) {
+              ctx.fillRect(offset + (rx + x) * cell, offset + (ry + y) * cell, cell - 0.5, cell - 0.5);
+            }
+          }
+        }
+      }
+      finder(0, 0);
+      finder(size - 7, 0);
+      finder(0, size - 7);
+
+      const urlSeed = (window.location.origin + '/Lume.apk');
+      let hash = 2166136261;
+      for (let i = 0; i < urlSeed.length; i++) {
+        hash ^= urlSeed.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+      }
+
+      for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+          const inFinder = (x < 8 && y < 8) || (x >= size - 8 && y < 8) || (x < 8 && y >= size - 8);
+          if (inFinder) continue;
+          hash ^= (x * 37 + y * 101);
+          hash = Math.imul(hash, 16777619);
+          if ((Math.abs(hash) % 10) < 5) {
+            ctx.beginPath();
+            ctx.roundRect(offset + x * cell, offset + y * cell, cell - 0.8, cell - 0.8, 2);
+            ctx.fill();
+          }
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
