@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="./repo-cover.jpg" alt="Lume. — Edit Beyond Ordinary Banner" width="100%" style="border-radius: 18px;" />
+  <img src="./website/repo-cover.jpg" alt="Lume. — Edit Beyond Ordinary Banner" width="100%" style="border-radius: 18px;" />
 
   <br />
   <br />
